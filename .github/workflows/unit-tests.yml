@@ -146,6 +146,7 @@ jobs:
       run: |
         git remote get-url upstream || git remote add upstream https://github.com/pandas-dev/pandas.git
         git fetch --tags upstream --force
+        git fetch --tags origin --force
         git describe --tags --always || true   # debug only 
 
     - name: Extra installs
