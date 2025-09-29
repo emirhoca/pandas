@@ -144,9 +144,9 @@ jobs:
 
     - name: Fetch upstream tags for Versioneer
       run: |
-        git remote add upstream https://github.com/pandas-dev/pandas.git
+        git remote get-url upstream || git remote add upstream https://github.com/pandas-dev/pandas.git
         git fetch --tags upstream --force
-        git tag -l | tail -n 5  # optional: show a few tags for debug    
+        git describe --tags --always || true   # debug only 
 
     - name: Extra installs
       # https://pytest-qt.readthedocs.io/en/latest/troubleshooting.html#github-actions-azure-pipelines-travis-ci-and-gitlab-ci-cd
@@ -239,6 +239,14 @@ jobs:
               git checkout $GITHUB_BASE_REF
               git -c user.email="you@example.com" merge --no-commit my_ref_name
           fi
+
+      - name: Fetch upstream tags for Versioneer
+        run: |
+          cd "$GITHUB_WORKSPACE"
+          git remote get-url upstream || git remote add upstream https://github.com/pandas-dev/pandas.git
+          git fetch --tags upstream --force
+          git describe --tags --always || true
+
       - name: Build environment and Run Tests
         # https://github.com/numpy/numpy/issues/24703#issuecomment-1722379388
         # Note: Pinned to Cython 3.0.10 to avoid numerical instability in 32-bit environments
